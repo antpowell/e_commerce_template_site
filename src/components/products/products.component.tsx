@@ -1,13 +1,16 @@
 import { Grid } from '@material-ui/core';
 import React from 'react';
 
-import { products } from '../../services/ProductsMock/products.mocks';
+import { iProduct } from '../../models/product.model';
 import Product from './Product/product.component';
 import useStyles from './products.styles';
 
+interface ProductsProps
+{
+   products: iProduct[];
+}
 
-
-export const Products = () =>
+export const Products = ({ products }: ProductsProps) =>
 {
    const classes = useStyles();
 
