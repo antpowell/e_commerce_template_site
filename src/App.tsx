@@ -2,6 +2,7 @@ import './App.css';
 
 import React from 'react';
 import { useEffect, useState } from 'react';
+import { RecoilRoot } from 'recoil';
 
 import { NavBar, Products } from './components';
 import { commerce } from './lib/commerce';
@@ -42,12 +43,10 @@ export const App = () => {
     console.log(cart);
 
     return (
-        <>
-            <div className="App">
+        <RecoilRoot>
                 <NavBar />
                 <Products products={products} />
-            </div>
-        </>
+        </RecoilRoot>
     );
 };
 
