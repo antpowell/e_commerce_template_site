@@ -5,25 +5,19 @@ import React from 'react';
 import { TexasIcon } from '../../assets';
 import useStyles from './navBar.styles';
 
-interface NavBarProps
-{
-
-}
-
-export const NavBar = (props: NavBarProps) =>
-{
+export const NavBar = () => {
     const classes = useStyles();
     return (
         <div>
-            <AppBar position='fixed' className={classes.appBar} color='inherit'>
+            <AppBar position="fixed" className={classes.appBar} color="inherit">
                 <Toolbar>
-                    <Typography variant='h6' className={classes.title} color='inherit'>
-                        <img src={TexasIcon} alt="Commerce.js" height='25px' className={classes.image} />
+                    <Typography variant="h6" className={classes.title} color="inherit">
+                        <img src={TexasIcon} alt="Commerce.js" height="25px" className={classes.image} />
                         NOT FOR PRODUCTION
                         <div className={classes.grow} />
                         <div className="">
-                            <IconButton aria-label='Show cart itmes' color='inherit'>
-                                <Badge badgeContent={2} color='secondary'>
+                            <IconButton aria-label="Show cart itmes" color="inherit">
+                                <Badge badgeContent={2} color="secondary">
                                     <ShoppingCart />
                                 </Badge>
                             </IconButton>
@@ -32,5 +26,5 @@ export const NavBar = (props: NavBarProps) =>
                 </Toolbar>
             </AppBar>
         </div>
-    )
-}
+    );
+};

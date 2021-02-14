@@ -1,48 +1,30 @@
-import { createContext, FC, ReactNode, useContext, useState } from 'react';
+import { createContext, ReactNode, useContext, useState } from 'react';
 
 import { commerce } from '../../lib/commerce';
-import { iAddToCart, iCart } from '../../models/cart.model';
+import { iCart } from '../../models/cart.model';
 
-const CartContext = createContext<iCart | null>(null);
-export const useCart = () =>
-{
+const CartContext = createContext<iCart | {}>({});
+export const useCart = (newCart?: iCart) => {
+    const [cart, setCart] = useState<iCart | {}>({});
     return useContext(CartContext);
-}
+};
 
-const AddToCartContext = createContext<iAddToCart | null>(null);
-export const useAddToCart = (id: string, quantity: number) =>
-{
-    handleAddToCart(id, quantity);
+// const AddToCartContext = createContext<iAddToCart>({} as iAddToCart);
+const cart = useCart();
+export const useAddToCart = async (id: string, quantity: number) => {
+    const item = await commerce.cart.add(id, quantity);
 
-    return useContext(AddToCartContext);
-}
+    const cart = useCart(item.cart);
 
-interface CartServiceProps
-{
+    return cart;
+};
+
+interface CartServiceProps {
     children: ReactNode;
 }
 
-const handleAddToCart: (productId: string, quantity: number) => Promise<void> = async (productId: string, quantity: number) =>
-{
-    const item = await commerce.cart.add(productId, quantity);
-
-    console.log(item.cart);
-    // setCart(item.cart as iCart);
-}
-
-const CartServiceProvider: FC<CartServiceProps> = ({ children }: CartServiceProps) =>
-{
-    const [cart, setCart] = useState<iCart | null>(null);
-
-
-
-    return (
-        <CartContext.Provider value={cart}>
-            <AddToCartContext.Provider value={handleAddToCart}>
-                {children}
-            </AddToCartContext.Provider>
-        </CartContext.Provider >
-    );
-}
+const CartServiceProvider = ({ children }: CartServiceProps) => {
+    return <CartContext.Provider value={cart}>{children}</CartContext.Provider>;
+};
 
 export default CartServiceProvider;

@@ -1,3 +1,5 @@
+import { Provider } from 'react';
+
 interface Subtotal
 {
     raw: number;
@@ -29,5 +31,5 @@ export interface iCart
 
 export interface iAddToCart
 {
-    (productId: string, quantity: number): Promise<void>;
+    addToCart: (productId: string, quantity: number) => Provider<void>;
 }
