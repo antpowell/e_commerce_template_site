@@ -1,26 +1,29 @@
 import { Grid } from '@material-ui/core';
-import React from 'react';
+import React, { FC } from 'react';
+import { useRecoilValue } from 'recoil';
 
-import { iProduct } from '../../models/product.model';
-import Product from './Product/product.component';
+import { productsAtom } from '../../atoms/products.atom';
+import { Product } from './Product/product.component';
 import useStyles from './products.styles';
 
-interface ProductsProps {
-  products: iProduct[];
-}
 
-export const Products = ({ products }: ProductsProps) => {
+
+
+export const Products: FC = () => {
   const classes = useStyles();
+  const products = useRecoilValue(productsAtom);
 
   return (
     <main className={classes.content}>
       <div className={classes.toolbar} />
       <Grid container justify='center' spacing={4}>
-        {products.map((product) => (
+        {products.map((product) => {
+          
+          return (
           <Grid item key={product.id} xs={12} sm={6} md={4}>
             <Product product={product} />
           </Grid>
-        ))}
+        )})}
       </Grid>
     </main>
   );

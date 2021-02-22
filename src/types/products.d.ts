@@ -1,19 +1,21 @@
-interface Price
-{
+interface Price {
     raw: number;
     formatted: string;
     formatted_with_symbol: string;
     formatted_with_code: string;
 }
 
-interface Media
-{
+interface Media {
     type: string;
     source: string;
 }
 
-interface Conditionals
-{
+interface Seo {
+    title?: any;
+    description?: any;
+}
+
+interface Conditionals {
     is_active: boolean;
     is_free: boolean;
     is_tax_exempt: boolean;
@@ -31,8 +33,7 @@ interface Conditionals
     collects_extrafields: boolean;
 }
 
-interface Is
-{
+interface Is {
     active: boolean;
     free: boolean;
     tax_exempt: boolean;
@@ -41,8 +42,7 @@ interface Is
     sold_out: boolean;
 }
 
-interface Has
-{
+interface Has {
     digital_delivery: boolean;
     physical_delivery: boolean;
     images: boolean;
@@ -50,43 +50,40 @@ interface Has
     rich_embed: boolean;
 }
 
-interface Collects
-{
+interface Collects {
     fullname: boolean;
     shipping_address: boolean;
     billing_address: boolean;
     extrafields: boolean;
 }
 
-interface CheckoutUrl
-{
+interface CheckoutUrl {
     checkout: string;
     display: string;
 }
 
-interface Category
-{
-    id: string;
-    slug: string;
-    name: string;
+interface ImageDimensions {
+    width: number;
+    height: number;
 }
 
-interface Asset
-{
+interface Asset {
     id: string;
     url: string;
     is_image: boolean;
-    data: any[];
+    filename: string;
+    file_size: number;
+    file_extension: string;
+    image_dimensions: ImageDimensions;
     meta: any[];
     created_at: number;
-    merchant_id: number;
+    updated_at: number;
 }
 
-export interface iProduct
-{
+export interface iProduct {
     id: string;
     created: number;
-    last_updated: number;
+    updated: number;
     active: boolean;
     permalink: string;
     name: string;
@@ -95,6 +92,9 @@ export interface iProduct
     quantity: number;
     media: Media;
     sku?: any;
+    sort_order: number;
+    seo: Seo;
+    thank_you_url?: any;
     meta?: any;
     conditionals: Conditionals;
     is: Is;
@@ -103,6 +103,27 @@ export interface iProduct
     checkout_url: CheckoutUrl;
     extrafields: any[];
     variants: any[];
-    categories: Category[];
+    categories: any[];
     assets: Asset[];
+    related_products: any[];
+}
+
+interface Links {}
+
+interface Pagination {
+    total: number;
+    count: number;
+    per_page: number;
+    current_page: number;
+    total_pages: number;
+    links: Links;
+}
+
+interface Meta {
+    pagination: Pagination;
+}
+
+export interface iProducts {
+    data: iProduct[];
+    meta: Meta;
 }

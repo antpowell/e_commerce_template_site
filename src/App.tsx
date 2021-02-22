@@ -1,25 +1,28 @@
 import './App.css';
 
-import React from 'react';
+import React, { FC } from 'react';
 import { useEffect, useState } from 'react';
-import { RecoilRoot } from 'recoil';
+import { RecoilRoot, useSetRecoilState } from 'recoil';
 
+import { productsAtom } from './atoms/products.atom';
 import { NavBar, Products } from './components';
 import { commerce } from './lib/commerce';
 import { iCart } from './models/cart.model';
-import { iProduct } from './models/product.model';
+import { iProduct } from './types/products';
 
-// interface AppProps {}
-
-export const App = () => {
-    const [products, setProducts] = useState<iProduct[]>([]);
+    export const App: FC = () => {
+    
     const [cart, setCart] = useState<iCart>();
-    // const cart = useContext();
 
+    const setProductIDsAtom = useSetRecoilState(productsAtom);
+        
     const fetchProducts = async () => {
-        const { data } = await commerce.products.list();
-
-        setProducts(data);
+        const {data}:{data: iProduct[]} = await commerce.products.list();
+        data.map((product)=>{
+            setProductIDsAtom((products)=>[...products, product]);
+        });
+        return data;
+        
     };
 
     const fetchCart = async () => {
@@ -36,18 +39,20 @@ export const App = () => {
     useEffect(() => {
         fetchProducts();
         fetchCart();
-        return () => {};
+        return () => { };
     }, []);
 
-    console.log(products);
+    // console.log(products);
     console.log(cart);
 
     return (
-        <RecoilRoot>
-                <NavBar />
-                <Products products={products} />
-        </RecoilRoot>
+        <>
+            <NavBar />
+            <Products />
+        </>
     );
 };
 
-export default App;
+export const AppRoot: FC = () => <RecoilRoot><App /></RecoilRoot>;
+
+export default AppRoot;

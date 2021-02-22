@@ -1,50 +1,48 @@
 import { Card, CardActions, CardContent, CardMedia, IconButton, Typography } from '@material-ui/core';
 import { AddShoppingCart } from '@material-ui/icons';
-import React from 'react';
+import React, { FC } from 'react';
+import { useSetRecoilState } from 'recoil';
 
-import { iProduct } from '../../../models/product.model';
-import { useAddToCart } from '../../../services/Cart/cart.service';
+import { cartAtom } from '../../../atoms/cart.atom';
+import { iCart } from '../../../types/cart';
+import { iProduct } from '../../../types/products';
 import useStyles from './product.style';
 
-interface ProductProps {
-    product: iProduct;
+
+export interface ProductProps {
+    product: iProduct
 }
 
-const Product = (
-    {
-        product: {
-            id,
-            name,
-            description,
-            price: { formatted_with_symbol },
-            media: { source },
-        },
-    }: ProductProps,
-    onAddToCart?: () => {},
-) => {
-    const classes = useStyles();
 
-    const addToCart = useAddToCart(id, 1);
+export const Product: FC<ProductProps> = ({ product }:{product: iProduct}) => {
+    
+    const classes = useStyles();
+    const useSetCart = useSetRecoilState(cartAtom);
+
+    const addToCart = (newCart: iCart|null, product: iProduct)=>{
+        console.log('adding to cart', product.name);
+        useSetCart(newCart);
+    }
 
     return (
         <Card className={classes.root}>
-            <CardMedia className={classes.media} image={source} title={name} />
+            <CardMedia className={classes.media} image={product?.media?.source} title={product?.name} />
             <CardContent>
                 <div className="classes.CardContent">
                     <Typography variant="h5" gutterBottom>
-                        {name}
+                        {product?.name}
                     </Typography>
-                    <Typography variant="h5">{formatted_with_symbol}</Typography>
+                    <Typography variant="h5">{product?.price?.formatted_with_symbol}</Typography>
                 </div>
                 <Typography variant="body2" color="textSecondary">
-                    {description.replace(/(?:<p>)|(?:<\/p>)/g, '')}
+                    {product?.description?.replace(/(?:<p>)|(?:<\/p>)/g, '')}
                 </Typography>
             </CardContent>
             <CardActions disableSpacing className={classes.cardActions}>
                 <IconButton
                     aria-label="Add to Cart"
                     onClick={() => {
-                        addToCart;
+                        addToCart(null, product);
                     }}
                 >
                     <AddShoppingCart />
@@ -53,5 +51,3 @@ const Product = (
         </Card>
     );
 };
-
-export default Product;

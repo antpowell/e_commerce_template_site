@@ -1,11 +1,11 @@
 import { AppBar, Badge, IconButton, Toolbar, Typography } from '@material-ui/core';
 import { ShoppingCart } from '@material-ui/icons';
-import React from 'react';
+import React, { FC } from 'react';
 
 import { TexasIcon } from '../../assets';
 import useStyles from './navBar.styles';
 
-export const NavBar = () => {
+export const NavBar: FC = () => {
     const classes = useStyles();
     return (
         <div>
