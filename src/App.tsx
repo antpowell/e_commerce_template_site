@@ -1,58 +1,51 @@
 import './App.css';
 
-import React, { FC } from 'react';
-import { useEffect, useState } from 'react';
+import React, { FC, Suspense } from 'react';
+import { useEffect } from 'react';
 import { RecoilRoot, useSetRecoilState } from 'recoil';
 
 import { productsAtom } from './atoms/products.atom';
 import { NavBar, Products } from './components';
 import { commerce } from './lib/commerce';
-import { iCart } from './models/cart.model';
+import { fetchCart } from './services/Cart/cart.service';
 import { iProduct } from './types/products';
 
-    export const App: FC = () => {
-    
-    const [cart, setCart] = useState<iCart>();
+export const App: FC = () => {
+    // const [cart, setCart] = useState<iCart>();
+    console.log({});
 
     const setProductIDsAtom = useSetRecoilState(productsAtom);
-        
+
     const fetchProducts = async () => {
-        const {data}:{data: iProduct[]} = await commerce.products.list();
-        data.map((product)=>{
-            setProductIDsAtom((products)=>[...products, product]);
+        const { data }: { data: iProduct[] } = await commerce.products.list();
+        data.map((product) => {
+            setProductIDsAtom((products) => {
+                return !products.includes(product) ? [...products, product] : [];
+            });
         });
         return data;
-        
     };
-
-    const fetchCart = async () => {
-        setCart(await commerce.cart.retrieve());
-    };
-
-    // const addToCartHandler = async (id: string, quantity: number) => {
-    //     const item = await commerce.cart.add(id, quantity);
-
-    //     setCart(item.cart);
-    //     console.log(cart);
-    // };
 
     useEffect(() => {
         fetchProducts();
         fetchCart();
-        return () => { };
+        return () => {};
     }, []);
-
-    // console.log(products);
-    console.log(cart);
 
     return (
         <>
-            <NavBar />
+            <Suspense fallback={<div>Loading...</div>}>
+                <NavBar />
+            </Suspense>
             <Products />
         </>
     );
 };
 
-export const AppRoot: FC = () => <RecoilRoot><App /></RecoilRoot>;
+export const AppRoot: FC = () => (
+    <RecoilRoot>
+        <App />
+    </RecoilRoot>
+);
 
 export default AppRoot;

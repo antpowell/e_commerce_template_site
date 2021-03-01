@@ -3,26 +3,23 @@ import { AddShoppingCart } from '@material-ui/icons';
 import React, { FC } from 'react';
 import { useSetRecoilState } from 'recoil';
 
-import { cartAtom } from '../../../atoms/cart.atom';
-import { iCart } from '../../../types/cart';
+import { cartAtom, handleAddToCart } from '../../../services/Cart/cart.service';
 import { iProduct } from '../../../types/products';
 import useStyles from './product.style';
 
-
 export interface ProductProps {
-    product: iProduct
+    product: iProduct;
 }
 
-
-export const Product: FC<ProductProps> = ({ product }:{product: iProduct}) => {
-    
+export const Product: FC<ProductProps> = ({ product }: { product: iProduct }) => {
     const classes = useStyles();
-    const useSetCart = useSetRecoilState(cartAtom);
+    const setCartAtom = useSetRecoilState(cartAtom);
+    // const useSetCart = useSetRecoilState(cartAtom);
 
-    const addToCart = (newCart: iCart|null, product: iProduct)=>{
-        console.log('adding to cart', product.name);
-        useSetCart(newCart);
-    }
+    // const addToCart = (newCart: iCart | null, product: iProduct) => {
+    //     console.log('adding to cart', product.name);
+    //     useSetCart(newCart);
+    // };
 
     return (
         <Card className={classes.root}>
@@ -41,8 +38,10 @@ export const Product: FC<ProductProps> = ({ product }:{product: iProduct}) => {
             <CardActions disableSpacing className={classes.cardActions}>
                 <IconButton
                     aria-label="Add to Cart"
-                    onClick={() => {
-                        addToCart(null, product);
+                    onClick={async () => {
+                        setCartAtom(await handleAddToCart(product.id, 1));
+                        // console.log(await commerce.cart.add(product.id, 1));
+                        // handleAddToCart(product?.id, 1);
                     }}
                 >
                     <AddShoppingCart />
